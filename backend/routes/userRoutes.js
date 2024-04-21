@@ -4,9 +4,9 @@ import { signUpUser, loginUser } from "../controllers/userController.js";
 const router = express.Router();
 
 // - /api/users/signup
-router.get("/signup", signUpUser);
+router.post("/signup", signUpUser);
 
 // - /api/users/login
-router.get("/login", loginUser);
+router.post("/login", loginUser);
 
 export default router;
