@@ -15,7 +15,7 @@ function Navbar() {
             </a>
           </li>
           <li>
-            <a className="text-lg text-primary" href="/login">
+            <a className="text-lg" href="/login">
               Login
             </a>
           </li>
