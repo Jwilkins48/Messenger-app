@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
 
 function Login() {
+  const { login } = useLogin();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(email);
+    login(email, password);
   };
   return (
     <div className="flex justify-center items-center h-[calc(100vh-5rem)]">
@@ -40,7 +42,10 @@ function Login() {
               className="p-1 mb-4 input bg-gray-200"
             />
 
-            <button className="btn btn-primary" type="submit">
+            <button
+              className="btn bg-[#2fb0af] border-0 text-white"
+              type="submit"
+            >
               Submit
             </button>
           </form>

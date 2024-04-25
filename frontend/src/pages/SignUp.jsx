@@ -1,20 +1,22 @@
 import { useState } from "react";
+import { useSignUp } from "../hooks/useSignUp";
 
 function SignUp() {
+  const { signUp } = useSignUp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(email);
+    signUp(email, password);
   };
   return (
     <div className="flex justify-center items-center h-[calc(100vh-5rem)]">
       <div className="w-[60rem] h-[35rem] flex form">
         <div className="w-[60%] flex flex-col items-center justify-center left bg-primary">
           <h2 className="pb-4 text-4xl text-gray-300">Welcome to Messenger!</h2>
-          <div className="divider px-10 text-blue-200 ">
+          <div className="divider px-14 text-blue-200 ">
             <i className="fa-solid fa-ghost"></i>
           </div>
           <p className="text-lg text-blue-200 pt-4">
@@ -50,7 +52,10 @@ function SignUp() {
               className="p-1 mb-4 input bg-gray-200"
             />
 
-            <button className="btn btn-primary" type="submit">
+            <button
+              className="btn bg-[#2fb0af] border-0 text-white"
+              type="submit"
+            >
               Submit
             </button>
           </form>
