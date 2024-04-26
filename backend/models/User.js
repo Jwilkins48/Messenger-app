@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -14,7 +18,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // signup method for user model
-userSchema.statics.signup = async function (email, password) {
+userSchema.statics.signup = async function (name, email, password) {
   // Check for user
   const exists = await this.findOne({ email });
 
@@ -29,7 +33,7 @@ userSchema.statics.signup = async function (email, password) {
 
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await this.create({ email, password: hashedPassword });
+  const user = await this.create({ name, email, password: hashedPassword });
 
   return user;
 };

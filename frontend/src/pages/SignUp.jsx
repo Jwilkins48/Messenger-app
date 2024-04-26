@@ -3,13 +3,15 @@ import { useSignUp } from "../hooks/useSignUp";
 
 function SignUp() {
   const { signUp } = useSignUp();
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const onSubmit = (e) => {
     e.preventDefault();
-    signUp(email, password);
+    signUp(name, email, password);
   };
   return (
     <div className="flex justify-center items-center h-[calc(100vh-5rem)]">
@@ -26,6 +28,15 @@ function SignUp() {
         <div className="w-[40%] flex flex-col items-center justify-center bg-gray-300 right">
           <h1 className="mb-4 text-2xl text-neutral">Sign Up</h1>
           <form className="flex flex-col w-full px-12" onSubmit={onSubmit}>
+            <input
+              placeholder="Name"
+              onChange={(e) => setName(e.currentTarget.value)}
+              value={name}
+              type="text"
+              name="name"
+              className="p-1 mb-4 input bg-gray-200"
+            />
+
             <input
               placeholder="Email"
               onChange={(e) => setEmail(e.currentTarget.value)}

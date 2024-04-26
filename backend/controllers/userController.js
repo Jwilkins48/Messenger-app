@@ -6,14 +6,14 @@ const createToken = (_id) => {
 };
 
 const signUpUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
   try {
     // Method from model
-    const user = await User.signup(email, password);
+    const user = await User.signup(name, email, password);
     // Create Token
     const token = createToken(user.id);
 
-    res.status(201).json({ email, token });
+    res.status(201).json({ name, email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -21,13 +21,15 @@ const signUpUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     // Method from model
     const user = await User.login(email, password);
+    const name = user.name;
     // Create Token
     const token = createToken(user.id);
 
-    res.status(201).json({ email, token });
+    res.status(201).json({ name, email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
