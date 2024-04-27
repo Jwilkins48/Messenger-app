@@ -14,11 +14,11 @@ function Login() {
     <div className="flex justify-center items-center h-[calc(100vh-5rem)]">
       <div className="w-[60rem] h-[35rem] flex form">
         <div className="w-[60%] flex flex-col items-center justify-center left bg-primary">
-          <h2 className="pb-4 text-4xl text-gray-300">Welcome Back!</h2>
+          <h2 className="pb-4 text-4xl text-neutral">Welcome Back!</h2>
           <div className="divider px-10 text-blue-200 ">
             <i className="fa-solid fa-ghost"></i>
           </div>
-          <p className="text-lg text-blue-200 pt-4">
+          <p className="text-lg text-neutral pt-4">
             Effortless Communication Made Simple
           </p>
         </div>
@@ -43,7 +43,7 @@ function Login() {
             />
 
             <button
-              className="btn bg-[#2fb0af] border-0 text-white"
+              className="btn bg-[#008fad] border-0 text-white"
               type="submit"
             >
               Submit

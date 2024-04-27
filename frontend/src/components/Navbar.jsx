@@ -6,9 +6,9 @@ function Navbar() {
   const { logout } = useLogout();
 
   return (
-    <nav className="flex justify-between h-[5rem] border-b-2 p-5 items-center">
+    <nav className="flex justify-between h-[5rem] border-b-2 border-[#008fad] p-5 items-center">
       <div>
-        <a className="text-3xl text-primary" href="/">
+        <a className="text-3xl text-[#008fad]" href="/">
           Messenger
         </a>
       </div>

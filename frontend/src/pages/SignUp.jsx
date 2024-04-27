@@ -64,7 +64,7 @@ function SignUp() {
             />
 
             <button
-              className="btn bg-[#2fb0af] border-0 text-white"
+              className="btn bg-[#008fad] border-0 text-white"
               type="submit"
             >
               Submit
