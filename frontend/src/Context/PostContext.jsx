@@ -14,7 +14,7 @@ export const postReducer = (state, action) => {
       };
     case "DELETE_POST":
       return {
-        posts: state.post.filter((p) => p._id !== action.payload._id),
+        posts: state.posts.filter((p) => p._id !== action.payload._id),
       };
     default:
       return state;

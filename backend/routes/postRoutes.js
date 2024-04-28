@@ -1,5 +1,9 @@
 import express from "express";
-import { displayPosts, newPost } from "../controllers/postController.js";
+import {
+  deletePosts,
+  displayPosts,
+  newPost,
+} from "../controllers/postController.js";
 
 const router = express.Router();
 
@@ -8,5 +12,8 @@ router.get("/", displayPosts);
 
 // - /api/post/new
 router.post("/new", newPost);
+
+// - /api/post/:id
+router.delete("/:id", deletePosts);
 
 export default router;
