@@ -2,8 +2,8 @@ import Post from "../models/Post.js";
 import mongoose from "mongoose";
 
 const displayPosts = async (req, res) => {
-  // const userId = req.user._id;
-  const posts = await Post.find().sort({ createdAt: -1 });
+  const userId = req.user._id;
+  const posts = await Post.find({ userId }).sort({ createdAt: -1 });
   res.status(200).json(posts);
 };
 
@@ -15,8 +15,8 @@ const newPost = async (req, res) => {
   }
 
   try {
-    // const userId = req.user._id;
-    const newPost = await Post.create({ post });
+    const userId = req.user._id;
+    const newPost = await Post.create({ post, userId });
     res.status(201).json(newPost);
   } catch (error) {
     res.status(400).json({ error: error.message });

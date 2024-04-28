@@ -1,13 +1,17 @@
 import { useAuthContext } from "../hooks/useAuthContext";
+import { usePostContext } from "../hooks/usePostContext";
 
 export const useLogout = () => {
   const { dispatch } = useAuthContext();
+  const { dispatch: postDispatch } = usePostContext();
 
   const logout = () => {
-    // Remove user from local storage
+    // Remove from local storage
     localStorage.removeItem("user");
-    // Set user to null
+    // set global user to null
     dispatch({ type: "LOGOUT" });
+    // set global user to null
+    postDispatch({ type: "SET_POST", payload: null });
   };
 
   return { logout };

@@ -4,8 +4,10 @@ import {
   displayPosts,
   newPost,
 } from "../controllers/postController.js";
+import requireAuth from "../middleware/requireAuth.js";
 
 const router = express.Router();
+router.use(requireAuth);
 
 // - /api/post/
 router.get("/", displayPosts);
