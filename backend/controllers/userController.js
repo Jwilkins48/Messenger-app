@@ -12,8 +12,8 @@ const signUpUser = async (req, res) => {
     const user = await User.signup(name, email, password);
     // Create Token
     const token = createToken(user.id);
-
-    res.status(201).json({ name, email, token });
+    const timeStamp = user.createdAt;
+    res.status(201).json({ name, email, timeStamp, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -26,11 +26,12 @@ const loginUser = async (req, res) => {
     // Method from model
     const user = await User.login(email, password);
     const name = user.name;
+    const timeStamp = user.createdAt;
 
     // Create Token
     const token = createToken(user.id);
 
-    res.status(201).json({ name, email, token });
+    res.status(201).json({ name, email, timeStamp, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

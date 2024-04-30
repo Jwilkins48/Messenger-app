@@ -3,6 +3,8 @@ import { useAuthContext } from "../hooks/useAuthContext.jsx";
 import { usePostContext } from "../hooks/usePostContext.jsx";
 import PostList from "../components/PostList.jsx";
 import PostModal from "../components/PostModal.jsx";
+import ProfileDetails from "../components/ProfileDetails.jsx";
+import FriendsList from "../components/FriendsList.jsx";
 
 function Home() {
   const { user } = useAuthContext();
@@ -26,19 +28,27 @@ function Home() {
   }, [dispatch, user.token]);
 
   return (
-    <div className=" py-10 justify-start flex flex-col gap-2">
-      <div className="text-center justify-center flex items-center gap-2">
-        <h1 className="text-4xl font-bold">
-          Welcome, <span className="text-primary">{user.name}</span>!
-        </h1>
-
-        <PostModal />
+    <div className="py-4 px-6 justify-between flex">
+      <div className="start w-[20%]">
+        <ProfileDetails />
       </div>
+      <div className="middle w-[60%]">
+        <div className="text-center justify-center flex items-center gap-2">
+          <h1 className="text-4xl font-bold">
+            Welcome, <span className="text-primary">{user.name}</span>!
+          </h1>
 
-      <div className="">
-        {posts?.map((post) => (
-          <PostList key={post._id} post={post} />
-        ))}
+          <PostModal />
+        </div>
+
+        <div className="">
+          {posts?.map((post) => (
+            <PostList key={post._id} post={post} />
+          ))}
+        </div>
+      </div>
+      <div className="w-[20%] ">
+        <FriendsList />
       </div>
     </div>
   );
