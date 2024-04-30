@@ -1,5 +1,6 @@
 import { usePostContext } from "../hooks/usePostContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 function PostList({ post }) {
   const { user } = useAuthContext();
@@ -20,10 +21,18 @@ function PostList({ post }) {
       dispatch({ type: "DELETE_POST", payload: json });
     }
   };
+
   return (
     <div className="border mx-20 p-6 my-6 flex justify-between">
-      <p>{user?.name}</p>
+      <p className={user.email == post.email ? "text-primary" : ""}>
+        {post.author}
+      </p>
       <div>{post?.post}</div>
+      <p>
+        {formatDistanceToNow(new Date(post.createdAt), {
+          addSuffix: true,
+        })}
+      </p>
       <button onClick={handleDelete}>Delete</button>
     </div>
   );

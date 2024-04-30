@@ -26,6 +26,7 @@ const loginUser = async (req, res) => {
     // Method from model
     const user = await User.login(email, password);
     const name = user.name;
+
     // Create Token
     const token = createToken(user.id);
 
