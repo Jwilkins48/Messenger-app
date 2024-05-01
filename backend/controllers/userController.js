@@ -10,9 +10,12 @@ const signUpUser = async (req, res) => {
   try {
     // Method from model
     const user = await User.signup(name, email, password);
+
     // Create Token
     const token = createToken(user.id);
+
     const timeStamp = user.createdAt;
+
     res.status(201).json({ name, email, timeStamp, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -25,11 +28,12 @@ const loginUser = async (req, res) => {
   try {
     // Method from model
     const user = await User.login(email, password);
-    const name = user.name;
-    const timeStamp = user.createdAt;
 
     // Create Token
     const token = createToken(user.id);
+
+    const name = user.name;
+    const timeStamp = user.createdAt;
 
     res.status(201).json({ name, email, timeStamp, token });
   } catch (error) {
