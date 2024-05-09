@@ -65,7 +65,6 @@ function Home() {
           <div className="py-1 shadow">
             <div className=" flex items-center justify-center gap-2">
               <i className="fa-solid fa-user border border-primary py-2 px-4 rounded text-3xl shadow" />
-
               <label className="input input-bordered flex items-center w-[37rem] justify-between py-7 shadow">
                 <input
                   onChange={(e) => setPost(e.currentTarget.value)}
@@ -77,6 +76,7 @@ function Home() {
                 </button>
               </label>
             </div>
+
             <div className="divider px-20 pt-2">
               <i className="fa-solid fa-ghost" />
             </div>
@@ -93,14 +93,13 @@ function Home() {
             </div>
           </div>
         </div>
-
         <div className="">
           {posts?.map((post) => (
             <PostList key={post._id} post={post} />
           ))}
         </div>
       </div>
-      <div className="w-[] ">
+      <div>
         <FriendsList />
       </div>
     </div>

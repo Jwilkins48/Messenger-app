@@ -1,4 +1,5 @@
 import Post from "../models/Post.js";
+import Comment from "../models/Comment.js";
 import mongoose from "mongoose";
 
 const displayPosts = async (req, res) => {
@@ -14,7 +15,6 @@ const newPost = async (req, res) => {
   }
 
   try {
-    //const userId = req.user._id;
     const email = req.user.email;
     const newPost = await Post.create({ post, email, author });
     res.status(201).json(newPost);
@@ -23,6 +23,7 @@ const newPost = async (req, res) => {
   }
 };
 
+// IF DELETE POST - DELETE COMMENTS !!!
 const deletePosts = async (req, res) => {
   const { id } = req.params;
   const post = await Post.findByIdAndDelete({ _id: id });
@@ -38,4 +39,54 @@ const deletePosts = async (req, res) => {
   res.status(200).json(post);
 };
 
-export { deletePosts, displayPosts, newPost };
+// COMMENTS
+
+// SHOW ALL - /api/post/comments
+const displayComments = async (req, res) => {
+  // post ID from comment = posts id
+  //const { commentPostId, postId } = req.body;
+
+  const comments = await Comment.find().sort({ createdAt: -1 });
+  res.status(200).json(comments);
+};
+
+// CREATE NEW
+const newComment = async (req, res) => {
+  const { comment, author, postId } = req.body;
+
+  if (!comment) {
+    new Error("Cannot leave field empty");
+  }
+
+  try {
+    const newPost = await Comment.create({ comment, postId, author });
+    res.status(201).json(newPost);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// DELETE
+const deleteComment = async (req, res) => {
+  const { id } = req.params;
+  const comment = await Comment.findByIdAndDelete({ _id: id });
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "No Comment Found" });
+  }
+
+  if (!comment) {
+    return res.status(400).json({ error: "No Comment Found" });
+  }
+
+  res.status(200).json(comment);
+};
+
+export {
+  deletePosts,
+  displayPosts,
+  newPost,
+  displayComments,
+  newComment,
+  deleteComment,
+};
