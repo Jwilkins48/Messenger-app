@@ -5,6 +5,7 @@ import PostList from "../components/PostList.jsx";
 import PostModal from "../components/PostModal.jsx";
 import ProfileDetails from "../components/ProfileDetails.jsx";
 import FriendsList from "../components/FriendsList.jsx";
+// import { useCommentContext } from "../hooks/useCommentContext.jsx";
 
 function Home() {
   const { user } = useAuthContext();
@@ -12,6 +13,7 @@ function Home() {
 
   const [post, setPost] = useState("");
   const [error, setError] = useState(null);
+  // const { dispatch: commentDispatch } = useCommentContext();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -26,7 +28,6 @@ function Home() {
         dispatch({ type: "SET_POST", payload: json });
       }
     };
-
     fetchPosts();
   }, [dispatch, user.token]);
 
@@ -44,7 +45,6 @@ function Home() {
     });
 
     const json = await response.json();
-
     if (!response.ok) {
       setError(json.error);
     }

@@ -6,15 +6,15 @@ export const commentReducer = (state, action) => {
   switch (action.type) {
     case "SET_COMMENT":
       return {
-        comments: action.payload,
+        comments: action?.payload,
       };
     case "CREATE_COMMENT":
       return {
-        comments: [action.payload, ...state.comments],
+        comments: [action?.payload, ...state.comments],
       };
     case "DELETE_COMMENT":
       return {
-        comments: state.comments?.filter((c) => c._id !== action.payload._id),
+        comments: state.comments.filter((p) => p._id !== action.payload._id),
       };
     default:
       return state;

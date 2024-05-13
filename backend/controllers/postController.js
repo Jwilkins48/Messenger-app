@@ -43,22 +43,19 @@ const deletePosts = async (req, res) => {
 
 // SHOW ALL - /api/post/comments
 const displayComments = async (req, res) => {
-  // post ID from comment = posts id
-  //const { commentPostId, postId } = req.body;
-
   const comments = await Comment.find().sort({ createdAt: -1 });
   res.status(200).json(comments);
 };
 
-// CREATE NEW
+// CREATE NEW - /api/post/comments/new
 const newComment = async (req, res) => {
-  const { comment, author, postId } = req.body;
-
+  const { comment, postId, author } = req.body;
   if (!comment) {
     new Error("Cannot leave field empty");
   }
-
   try {
+    await Post.updateOne({ _id: postId }, { $push: { comments: comment } });
+
     const newPost = await Comment.create({ comment, postId, author });
     res.status(201).json(newPost);
   } catch (error) {
