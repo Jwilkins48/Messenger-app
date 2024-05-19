@@ -16,6 +16,7 @@ function PostList({ post }) {
 
   const currentUser = user.email == post.email;
   const newTime = time.replace("about", "");
+  const commentLength = post.comments.length;
   const postId = post._id;
 
   const [comment, setComment] = useState("");
@@ -42,7 +43,7 @@ function PostList({ post }) {
     }
 
     if (response.ok) {
-      commentDispatch({ type: "CREATE_COMMENT", payload: json });
+      dispatch({ type: "SET_POST", payload: json });
     }
   };
 
@@ -55,16 +56,11 @@ function PostList({ post }) {
         },
       });
 
-      const json = await response.json();
-
       if (!response.ok) {
         setError("Comment Required");
       }
-
-      if (response.ok) {
-        commentDispatch({ type: "SET_COMMENT", payload: json });
-      }
     };
+
     fetchComments();
   }, [commentDispatch, user.token]);
 
@@ -107,19 +103,33 @@ function PostList({ post }) {
       <div className="mt-5">
         <p className="text-xl">{post?.post}</p>
       </div>
-
       <div>
         <input
+          className="input"
           onChange={(e) => setComment(e.currentTarget.value)}
           type="text"
         />
-        <button onClick={newCommentClick}>comment</button>
+        <button className="btn" onClick={newCommentClick}>
+          comment
+        </button>
         <div>{error && <p>{error}</p>}</div>
       </div>
 
-      {post?.comments?.map((c) => (
-        <div key={uuidv4()}>{[c]}</div>
-      ))}
+      <div className="collapse bg-base-200">
+        <input type="checkbox" />
+        <div className="collapse-title text-xl font-medium">
+          {commentLength > 1
+            ? `${commentLength} Comments`
+            : `${commentLength} Comment`}
+        </div>
+        <div className="collapse-content">
+          {post?.comments?.map((c) => (
+            <div className="border" key={uuidv4()}>
+              {[c]}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="absolute right-6">
         {currentUser ? <button onClick={handleDelete}>Delete</button> : ""}

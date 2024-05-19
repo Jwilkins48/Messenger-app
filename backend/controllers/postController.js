@@ -54,10 +54,14 @@ const newComment = async (req, res) => {
     new Error("Cannot leave field empty");
   }
   try {
-    await Post.updateOne({ _id: postId }, { $push: { comments: comment } });
+    await Post.updateOne(
+      { _id: postId },
+      { $push: { comments: comment } },
+      { new: true }
+    );
 
-    const newPost = await Comment.create({ comment, postId, author });
-    res.status(201).json(newPost);
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(200).json(posts);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
