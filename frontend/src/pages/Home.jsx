@@ -67,6 +67,7 @@ function Home() {
               <i className="fa-solid fa-user border border-primary py-2 px-4 rounded text-3xl shadow" />
               <label className="input input-bordered flex items-center w-[37rem] justify-between py-7 shadow">
                 <input
+                  value={post}
                   onChange={(e) => setPost(e.currentTarget.value)}
                   type="text"
                   placeholder="What's New?"

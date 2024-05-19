@@ -19,17 +19,17 @@ function PostList({ post }) {
   const commentLength = post.comments.length;
   const postId = post._id;
 
+  const [dropdown, setDropdown] = useState(false);
   const [comment, setComment] = useState("");
   const [error, setError] = useState(null);
 
-  // // New Comment
+  // New Comment
   const newCommentClick = async (e) => {
     e.preventDefault();
-    const author = user.name;
 
     const response = await fetch("http://localhost:4000/api/post/comment/new", {
       method: "POST",
-      body: JSON.stringify({ comment, postId, author }),
+      body: JSON.stringify({ comment, postId }),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`,
@@ -37,6 +37,7 @@ function PostList({ post }) {
     });
 
     const json = await response.json();
+    setComment("");
 
     if (!response.ok) {
       setError("Comment Required");
@@ -101,27 +102,66 @@ function PostList({ post }) {
         </div>
       </div>
       <div className="mt-5">
-        <p className="text-xl">{post?.post}</p>
-      </div>
-      <div>
-        <input
-          className="input"
-          onChange={(e) => setComment(e.currentTarget.value)}
-          type="text"
-        />
-        <button className="btn" onClick={newCommentClick}>
-          comment
-        </button>
-        <div>{error && <p>{error}</p>}</div>
+        <p className="text-2xl">{post?.post}</p>
       </div>
 
-      <div className="collapse bg-base-200">
-        <input type="checkbox" />
-        <div className="collapse-title text-xl font-medium">
-          {commentLength > 1
-            ? `${commentLength} Comments`
-            : `${commentLength} Comment`}
+      <div className="pt-2">
+        <div className="flex justify-between">
+          <div>0 Likes</div>
+          <button onClick={() => setDropdown(!dropdown)}>
+            {commentLength > 1
+              ? `${commentLength} Comments`
+              : `${commentLength} Comment`}
+          </button>
         </div>
+
+        <div>
+          <div className="divider my-1" />
+          <div className="flex justify-between px-20">
+            <button>
+              <i className="fa-regular fa-heart" /> Like
+            </button>
+            <button>
+              <i className="fa-regular fa-comment" /> Comment
+            </button>
+          </div>
+          <div className="divider my-1" />
+        </div>
+      </div>
+
+      <div className={dropdown ? "" : "hidden"}>
+        {/* <label className="input input-bordered flex items-center justify-between py-7 shadow">
+          <input
+            onChange={(e) => setComment(e.currentTarget.value)}
+            type="text"
+          />
+          <button onClick={newCommentClick}>
+            <i className="fa-solid fa-arrow-right text-lg" />
+          </button>
+        </label> */}
+
+        <label className="input input-bordered flex items-center justify-between py-6 w-[16rem] shadow">
+          <input
+            onChange={(e) => setComment(e.currentTarget.value)}
+            value={comment}
+            type="text"
+          ></input>
+          <button className="" onClick={newCommentClick}>
+            <i className="fa-solid fa-arrow-right text-lg" />
+          </button>
+          <div>{error && <p>{error}</p>}</div>
+        </label>
+
+        {post?.comments?.map((c) => (
+          <div className="underline" key={uuidv4()}>
+            {[c]}
+          </div>
+        ))}
+      </div>
+
+      {/* <div className="collapse bg-base-200">
+        <input type="checkbox" />
+        <div className="collapse-title text-xl font-medium">Comments</div>
         <div className="collapse-content">
           {post?.comments?.map((c) => (
             <div className="border" key={uuidv4()}>
@@ -129,10 +169,16 @@ function PostList({ post }) {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       <div className="absolute right-6">
-        {currentUser ? <button onClick={handleDelete}>Delete</button> : ""}
+        {currentUser ? (
+          <button onClick={handleDelete}>
+            <i className="fa-solid fa-xmark text-xl" />
+          </button>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

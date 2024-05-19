@@ -49,7 +49,7 @@ const displayComments = async (req, res) => {
 
 // CREATE NEW - /api/post/comments/new
 const newComment = async (req, res) => {
-  const { comment, postId, author } = req.body;
+  const { comment, postId } = req.body;
   if (!comment) {
     new Error("Cannot leave field empty");
   }
