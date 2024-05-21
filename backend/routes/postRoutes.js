@@ -21,8 +21,8 @@ router.get("/comments", displayComments);
 // - /api/post/comment/new
 router.post("/comment/new", newComment);
 
-// - /api/post/comment/:id
-router.delete("/comment/:id", deleteComment);
+// - /api/post/comment/delete
+router.post("/comment/delete", deleteComment);
 
 // - /api/post/
 router.get("/", displayPosts);

@@ -5,7 +5,6 @@ import PostList from "../components/PostList.jsx";
 import PostModal from "../components/PostModal.jsx";
 import ProfileDetails from "../components/ProfileDetails.jsx";
 import FriendsList from "../components/FriendsList.jsx";
-// import { useCommentContext } from "../hooks/useCommentContext.jsx";
 
 function Home() {
   const { user } = useAuthContext();
@@ -13,7 +12,6 @@ function Home() {
 
   const [post, setPost] = useState("");
   const [error, setError] = useState(null);
-  // const { dispatch: commentDispatch } = useCommentContext();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -67,6 +65,7 @@ function Home() {
               <i className="fa-solid fa-user border border-primary py-2 px-4 rounded text-3xl shadow" />
               <label className="input input-bordered flex items-center w-[37rem] justify-between py-7 shadow">
                 <input
+                  className="w-full px-1"
                   value={post}
                   onChange={(e) => setPost(e.currentTarget.value)}
                   type="text"

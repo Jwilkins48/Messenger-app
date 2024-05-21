@@ -2,11 +2,15 @@ import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import mongoose from "mongoose";
 
+// POSTS
+
+// SHOW ALL
 const displayPosts = async (req, res) => {
   const posts = await Post.find().sort({ createdAt: -1 });
   res.status(200).json(posts);
 };
 
+// CREATE POST
 const newPost = async (req, res) => {
   const { post, author } = req.body;
 
@@ -23,7 +27,7 @@ const newPost = async (req, res) => {
   }
 };
 
-// IF DELETE POST - DELETE COMMENTS !!!
+// DELETE POST
 const deletePosts = async (req, res) => {
   const { id } = req.params;
   const post = await Post.findByIdAndDelete({ _id: id });
@@ -47,16 +51,17 @@ const displayComments = async (req, res) => {
   res.status(200).json(comments);
 };
 
-// CREATE NEW - /api/post/comments/new
+// CREATE COMMENT - /api/post/comments/new
 const newComment = async (req, res) => {
-  const { comment, postId } = req.body;
+  const { comment, postId, postedBy } = req.body;
   if (!comment) {
     new Error("Cannot leave field empty");
   }
+
   try {
     await Post.updateOne(
       { _id: postId },
-      { $push: { comments: comment } },
+      { $push: { comments: { comment: comment, postedBy: postedBy } } },
       { new: true }
     );
 
@@ -67,20 +72,18 @@ const newComment = async (req, res) => {
   }
 };
 
-// DELETE
+// DELETE COMMENT - /api/post/comment/delete
 const deleteComment = async (req, res) => {
-  const { id } = req.params;
-  const comment = await Comment.findByIdAndDelete({ _id: id });
+  const { postComment, postId, postedBy } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "No Comment Found" });
-  }
+  await Post.updateOne(
+    { _id: postId },
+    { $pull: { comments: { comment: postComment, postedBy: postedBy } } },
+    { new: true }
+  );
+  const posts = await Post.find().sort({ createdAt: -1 });
 
-  if (!comment) {
-    return res.status(400).json({ error: "No Comment Found" });
-  }
-
-  res.status(200).json(comment);
+  res.status(200).json(posts);
 };
 
 export {
