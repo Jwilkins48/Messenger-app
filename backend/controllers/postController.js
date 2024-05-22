@@ -1,6 +1,7 @@
 import Post from "../models/Post.js";
-import Comment from "../models/Comment.js";
+import Comment from "../models/Comments.js";
 import mongoose from "mongoose";
+import Likes from "../models/Likes.js";
 
 // POSTS
 
@@ -86,7 +87,20 @@ const deleteComment = async (req, res) => {
   res.status(200).json(posts);
 };
 
+// LIKES
+const newLike = async (req, res) => {
+  const { userEmail, postId } = req.body;
+
+  try {
+    const newLike = await Likes.create({ userEmail, postId });
+    res.status(201).json(newLike);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 export {
+  newLike,
   deletePosts,
   displayPosts,
   newPost,

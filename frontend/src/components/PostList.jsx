@@ -19,6 +19,7 @@ function PostList({ post }) {
 
   const [dropdown, setDropdown] = useState(false);
   const [comment, setComment] = useState("");
+  const [liked, setLiked] = useState(false);
   const [error, setError] = useState(null);
 
   // New Comment
@@ -91,6 +92,32 @@ function PostList({ post }) {
     }
   };
 
+  const newLikeClick = async (e) => {
+    e.preventDefault();
+    const userEmail = user.email;
+
+    //console.log(postId);
+    const response = await fetch("http://localhost:4000/api/post/likes", {
+      method: "POST",
+      body: JSON.stringify({ userEmail, postId }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    const json = await response.json();
+
+    if (!response.ok) {
+      setError(json.error);
+    }
+
+    if (response.ok) {
+      console.log(json);
+      setLiked(!liked);
+    }
+  };
+
   return (
     <div className="bg-neutral mx-2 p-6 my-6 flex flex-col relative justify-between rounded shadow">
       <div>
@@ -116,7 +143,7 @@ function PostList({ post }) {
 
       <div className="pt-2">
         <div className="flex justify-between">
-          <button className="hover:underline">0 Likes</button>
+          <p>0 Likes</p>
           <button
             className="hover:underline"
             onClick={() => setDropdown(!dropdown)}
@@ -130,8 +157,16 @@ function PostList({ post }) {
         <div>
           <div className="divider my-1" />
           <div className="flex justify-between px-20">
-            <button className="hover:underline">
-              <i className="fa-regular fa-heart" /> Like
+            <button onClick={newLikeClick} className="hover:underline">
+              {!liked ? (
+                <p>
+                  <i className="fa-regular fa-heart" /> Like
+                </p>
+              ) : (
+                <p>
+                  <i className="fa-solid fa-heart" /> Like
+                </p>
+              )}
             </button>
             <button
               className=" hover:underline"
