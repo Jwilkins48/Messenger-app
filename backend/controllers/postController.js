@@ -1,7 +1,6 @@
 import Post from "../models/Post.js";
-import Comment from "../models/Comments.js";
+// import Comment from "../models/Comments.js";
 import mongoose from "mongoose";
-import Likes from "../models/Likes.js";
 
 // POSTS
 
@@ -55,6 +54,7 @@ const displayComments = async (req, res) => {
 // CREATE COMMENT - /api/post/comments/new
 const newComment = async (req, res) => {
   const { comment, postId, postedBy } = req.body;
+
   if (!comment) {
     new Error("Cannot leave field empty");
   }
@@ -88,12 +88,20 @@ const deleteComment = async (req, res) => {
 };
 
 // LIKES
+
+// NEW LIKE
 const newLike = async (req, res) => {
   const { userEmail, postId } = req.body;
 
   try {
-    const newLike = await Likes.create({ userEmail, postId });
-    res.status(201).json(newLike);
+    await Post.updateOne(
+      { _id: postId },
+      { $addToSet: { likes: { userEmail: userEmail, postId: postId } } },
+      { new: true }
+    );
+
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(200).json(posts);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -104,7 +112,7 @@ export {
   deletePosts,
   displayPosts,
   newPost,
-  displayComments,
   newComment,
   deleteComment,
+  displayComments,
 };

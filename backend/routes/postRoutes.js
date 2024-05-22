@@ -38,7 +38,7 @@ router.delete("/:id", deletePosts);
 
 // LIKES
 
-// - /api/post/likes
-router.post("/likes", newLike);
+// - /api/post/likes/new
+router.post("/likes/new", newLike);
 
 export default router;

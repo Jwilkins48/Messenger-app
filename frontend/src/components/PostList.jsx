@@ -12,9 +12,11 @@ function PostList({ post }) {
   const { user } = useAuthContext();
   const { dispatch } = usePostContext();
 
-  const currentUser = user.email == post.email;
+  const likesLength = post.likes.length;
   const newTime = time.replace("about", "");
   const commentLength = post.comments.length;
+  const currentUser = user.email == post.email;
+
   const postId = post._id;
 
   const [dropdown, setDropdown] = useState(false);
@@ -96,8 +98,7 @@ function PostList({ post }) {
     e.preventDefault();
     const userEmail = user.email;
 
-    //console.log(postId);
-    const response = await fetch("http://localhost:4000/api/post/likes", {
+    const response = await fetch("http://localhost:4000/api/post/likes/new", {
       method: "POST",
       body: JSON.stringify({ userEmail, postId }),
       headers: {
@@ -109,12 +110,11 @@ function PostList({ post }) {
     const json = await response.json();
 
     if (!response.ok) {
-      setError(json.error);
+      setError("error");
     }
 
     if (response.ok) {
-      console.log(json);
-      setLiked(!liked);
+      dispatch({ type: "SET_POST", payload: json });
     }
   };
 
@@ -143,12 +143,14 @@ function PostList({ post }) {
 
       <div className="pt-2">
         <div className="flex justify-between">
-          <p>0 Likes</p>
+          <p>
+            {likesLength !== 1 ? `${likesLength} Likes` : `${likesLength} Like`}
+          </p>
           <button
             className="hover:underline"
             onClick={() => setDropdown(!dropdown)}
           >
-            {commentLength > 1
+            {commentLength !== 1
               ? `${commentLength} Comments`
               : `${commentLength} Comment`}
           </button>
@@ -164,7 +166,7 @@ function PostList({ post }) {
                 </p>
               ) : (
                 <p>
-                  <i className="fa-solid fa-heart" /> Like
+                  <i className="fa-solid fa-heart text-primary" /> Like
                 </p>
               )}
             </button>
