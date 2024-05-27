@@ -1,8 +1,9 @@
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { usePostContext } from "../hooks/usePostContext";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import LikedPost from "./LikedPost";
+import { useState } from "react";
 
 function PostList({ post }) {
   const time = formatDistanceToNow(new Date(post.createdAt), {
@@ -16,7 +17,6 @@ function PostList({ post }) {
   const newTime = time.replace("about", "");
   const commentLength = post.comments.length;
   const currentUser = user.email == post.email;
-
   const postId = post._id;
 
   const [dropdown, setDropdown] = useState(false);
@@ -114,9 +114,13 @@ function PostList({ post }) {
     }
 
     if (response.ok) {
+      setLiked(!liked);
       dispatch({ type: "SET_POST", payload: json });
     }
   };
+
+  console.log(post.likes);
+  console.log(postId);
 
   return (
     <div className="bg-neutral mx-2 p-6 my-6 flex flex-col relative justify-between rounded shadow">
@@ -160,15 +164,12 @@ function PostList({ post }) {
           <div className="divider my-1" />
           <div className="flex justify-between px-20">
             <button onClick={newLikeClick} className="hover:underline">
-              {!liked ? (
-                <p>
-                  <i className="fa-regular fa-heart" /> Like
-                </p>
-              ) : (
-                <p>
-                  <i className="fa-solid fa-heart text-primary" /> Like
-                </p>
-              )}
+              {/* show if liked */}
+              {likesLength > 0
+                ? post.likes.map((l) => (
+                    <LikedPost l={l} key={l.postId} post={post} />
+                  ))
+                : "Like"}
             </button>
             <button
               className=" hover:underline"
@@ -220,7 +221,6 @@ function PostList({ post }) {
                       className=""
                       onClick={() => deleteComment(c.comment)}
                     >
-                      {/* onClick={deleteComment} */}
                       <i className="fa-solid fa-xmark text-md text-primary" />
                     </button>
                   ) : (
