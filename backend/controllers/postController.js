@@ -1,6 +1,6 @@
-import Post from "../models/Post.js";
-// import Comment from "../models/Comments.js";
 import mongoose from "mongoose";
+import Post from "../models/Post.js";
+import UserLikes from "../models/UserLikes.js";
 
 // POSTS
 
@@ -96,7 +96,15 @@ const newLike = async (req, res) => {
   try {
     await Post.updateOne(
       { _id: postId },
-      { $addToSet: { likes: { userEmail: userEmail, postId: postId } } },
+      {
+        $addToSet: {
+          likes: {
+            userEmail: userEmail,
+            postId: postId,
+            match: userEmail + postId,
+          },
+        },
+      },
       { new: true }
     );
 
@@ -107,12 +115,31 @@ const newLike = async (req, res) => {
   }
 };
 
+// Remember who likes which post
+const userLikes = async (req, res) => {
+  const { userEmail, postId } = req.body;
+
+  try {
+    const newLike = await UserLikes.create({ id: userEmail + postId });
+    res.status(201).json(newLike);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const displayUserLikes = async (req, res) => {
+  const userLikes = await UserLikes.find().sort({ createdAt: -1 });
+  res.status(200).json(userLikes);
+};
+
 export {
   newLike,
+  userLikes,
   deletePosts,
   displayPosts,
   newPost,
   newComment,
   deleteComment,
   displayComments,
+  displayUserLikes,
 };

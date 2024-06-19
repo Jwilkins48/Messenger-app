@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  displayUserLikes,
   deletePosts,
   displayPosts,
   newPost,
@@ -7,6 +8,7 @@ import {
   newComment,
   deleteComment,
   newLike,
+  userLikes,
 } from "../controllers/postController.js";
 import requireAuth from "../middleware/requireAuth.js";
 
@@ -40,5 +42,11 @@ router.delete("/:id", deletePosts);
 
 // - /api/post/likes/new
 router.post("/likes/new", newLike);
+
+// - /api/post/likes/userLike
+router.post("/likes/userLike", userLikes);
+
+// - /api/post/likes/userLikes
+router.get("/likes/userLikes", displayUserLikes);
 
 export default router;

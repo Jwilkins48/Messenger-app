@@ -23,15 +23,20 @@ const userSchema = new mongoose.Schema(
 // signup method for user model
 userSchema.statics.signup = async function (name, email, password) {
   // Check for user
-  const exists = await this.findOne({ email });
+  const emailExists = await this.findOne({ email });
+  const nameExists = await this.findOne({ name });
 
   // Validation
-  if (!email || !password) {
+  if (!email || !password || !name) {
     throw Error("Enter all fields");
   }
 
-  if (exists) {
+  if (emailExists) {
     throw Error("Email already in use");
+  }
+
+  if (nameExists) {
+    throw Error("Username already exists");
   }
 
   // Hash password
@@ -48,15 +53,11 @@ userSchema.statics.login = async function (email, password) {
   const match = await bcrypt.compare(password, user.password);
 
   // Validation
-  if (!email || !password) {
+  if (!email || !password || null) {
     throw Error("Enter all fields");
   }
 
-  if (!user) {
-    throw Error("Invalid login");
-  }
-
-  if (!match) {
+  if (!user || !match || null) {
     throw Error("Invalid login");
   }
 

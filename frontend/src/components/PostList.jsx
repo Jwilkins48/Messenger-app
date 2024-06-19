@@ -2,8 +2,8 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { usePostContext } from "../hooks/usePostContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { v4 as uuidv4 } from "uuid";
-import LikedPost from "./LikedPost";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function PostList({ post }) {
   const time = formatDistanceToNow(new Date(post.createdAt), {
@@ -13,6 +13,7 @@ function PostList({ post }) {
   const { user } = useAuthContext();
   const { dispatch } = usePostContext();
 
+  const postLike = post.likes.map((l) => l.match);
   const likesLength = post.likes.length;
   const newTime = time.replace("about", "");
   const commentLength = post.comments.length;
@@ -21,7 +22,6 @@ function PostList({ post }) {
 
   const [dropdown, setDropdown] = useState(false);
   const [comment, setComment] = useState("");
-  const [liked, setLiked] = useState(false);
   const [error, setError] = useState(null);
 
   // New Comment
@@ -94,6 +94,28 @@ function PostList({ post }) {
     }
   };
 
+  // Show if post is Liked
+  const userLikeClick = async () => {
+    const userEmail = user.email;
+
+    const response = await fetch(
+      "http://localhost:4000/api/post/likes/userLike",
+      {
+        method: "POST",
+        body: JSON.stringify({ userEmail, postId }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      setError("error");
+    }
+  };
+
+  // Like Post - adds to collection and +total number
   const newLikeClick = async (e) => {
     e.preventDefault();
     const userEmail = user.email;
@@ -108,42 +130,55 @@ function PostList({ post }) {
     });
 
     const json = await response.json();
+    userLikeClick();
+
+    if (response.ok) {
+      dispatch({ type: "SET_POST", payload: json });
+    }
 
     if (!response.ok) {
       setError("error");
     }
-
-    if (response.ok) {
-      setLiked(!liked);
-      dispatch({ type: "SET_POST", payload: json });
-    }
   };
-
-  console.log(post.likes);
-  console.log(postId);
 
   return (
     <div className="bg-neutral mx-2 p-6 my-6 flex flex-col relative justify-between rounded shadow">
       <div>
         <div className="flex items-center gap-2">
-          <i
-            className={
-              currentUser
-                ? "fa-solid fa-user border border-primary py-2 px-4 rounded text-3xl shadow"
-                : "fa-solid fa-user border border-accent py-2 px-4 rounded text-3xl shadow"
-            }
-          />
+          <Link to={`/profile/${post.author}`}>
+            <i
+              className={
+                currentUser
+                  ? "fa-solid fa-user border border-primary py-2 px-4 rounded text-3xl shadow"
+                  : "fa-solid fa-user border border-accent py-2 px-4 rounded text-3xl shadow"
+              }
+            />
+          </Link>
           <div>
-            <p className={currentUser ? "text-primary text-xl" : "text-accent"}>
+            <Link
+              to={{
+                pathname: `/profile/${post.author}`,
+              }}
+              className={
+                currentUser
+                  ? "text-primary text-xl hover:underline"
+                  : "text-accent text-xl hover:underline"
+              }
+            >
               {post.author}
-            </p>
-            <p className="text-xs">{newTime}</p>
+            </Link>
+            <p className="text-xs text-gray-400">{newTime}</p>
           </div>
         </div>
       </div>
+
       <div className="mt-5">
         <p className="text-2xl break-words">{post?.post}</p>
       </div>
+
+      {/* <Link to={`/profile/${post.author}`} className="btn w-20">
+        hi
+      </Link> */}
 
       <div className="pt-2">
         <div className="flex justify-between">
@@ -165,11 +200,7 @@ function PostList({ post }) {
           <div className="flex justify-between px-20">
             <button onClick={newLikeClick} className="hover:underline">
               {/* show if liked */}
-              {likesLength > 0
-                ? post.likes.map((l) => (
-                    <LikedPost l={l} key={l.postId} post={post} />
-                  ))
-                : "Like"}
+              {postLike.includes(user.email + postId) ? "Liked" : "Like"}
             </button>
             <button
               className=" hover:underline"
@@ -181,7 +212,6 @@ function PostList({ post }) {
           <div className="divider my-1" />
         </div>
       </div>
-
       <div className={dropdown ? "" : "hidden"}>
         <div className="flex gap-2">
           <i className="fa-solid fa-user border border-primary py-2 px-4 rounded text-3xl shadow" />
@@ -232,7 +262,6 @@ function PostList({ post }) {
           ))}
         </div>
       </div>
-
       <div className="absolute right-6">
         {currentUser ? (
           <button onClick={handleDelete}>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 
 function Login() {
-  const { login } = useLogin();
+  const { login, error } = useLogin();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -35,6 +35,7 @@ function Login() {
           <button className="btn bg-primary border-0 text-white" type="submit">
             Submit
           </button>
+          <div className="pt-2 text-accent">{error ? error : ""}</div>
         </form>
       </div>
     </div>

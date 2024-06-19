@@ -1,9 +1,6 @@
-function LikedPost({ l, post }) {
+function LikedPost({ l, post, email }) {
   return (
-    <div>
-      {post._id == l.postId ? "liked" : "like"}
-      {}
-    </div>
+    <div>{post._id == l.postId && l.userEmail == email ? "liked" : "like"}</div>
   );
 }
 

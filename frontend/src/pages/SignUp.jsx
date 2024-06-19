@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSignUp } from "../hooks/useSignUp";
 
 function SignUp() {
-  const { signUp } = useSignUp();
+  const { signUp, error } = useSignUp();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,6 +13,7 @@ function SignUp() {
     e.preventDefault();
     signUp(name, email, password);
   };
+
   return (
     <div className="flex justify-center items-center h-[calc(100vh-5rem)]">
       <div className="w-[20%] h-[35rem] rounded border-primary border flex flex-col items-center justify-center ">
@@ -56,6 +57,7 @@ function SignUp() {
           <button className="btn bg-primary border-0 text-white" type="submit">
             Submit
           </button>
+          <div className="pt-2 text-accent">{error ? error : ""}</div>
         </form>
       </div>
     </div>
