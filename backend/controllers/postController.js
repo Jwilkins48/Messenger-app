@@ -115,31 +115,35 @@ const newLike = async (req, res) => {
   }
 };
 
-// Remember who likes which post
-const userLikes = async (req, res) => {
-  const { userEmail, postId } = req.body;
+// DELETE LIKE - /api/post/comment/delete
+const deleteLike = async (req, res) => {
+  const { postId, userEmail } = req.body;
 
-  try {
-    const newLike = await UserLikes.create({ id: userEmail + postId });
-    res.status(201).json(newLike);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+  await Post.updateOne(
+    { _id: postId },
+    {
+      $pull: {
+        likes: {
+          match: userEmail + postId,
+          postId: postId,
+          userEmail: userEmail,
+        },
+      },
+    },
+    { new: true }
+  );
+  const posts = await Post.find().sort({ createdAt: -1 });
 
-const displayUserLikes = async (req, res) => {
-  const userLikes = await UserLikes.find().sort({ createdAt: -1 });
-  res.status(200).json(userLikes);
+  res.status(200).json(posts);
 };
 
 export {
+  newPost,
   newLike,
-  userLikes,
+  newComment,
+  deleteLike,
   deletePosts,
   displayPosts,
-  newPost,
-  newComment,
   deleteComment,
   displayComments,
-  displayUserLikes,
 };

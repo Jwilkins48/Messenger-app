@@ -3,13 +3,13 @@ import { usePostContext } from "../hooks/usePostContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function PostList({ post }) {
   const time = formatDistanceToNow(new Date(post.createdAt), {
     addSuffix: true,
   });
-
+  const navigate = useNavigate();
   const { user } = useAuthContext();
   const { dispatch } = usePostContext();
 
@@ -139,13 +139,49 @@ function PostList({ post }) {
     if (!response.ok) {
       setError("error");
     }
+
+    console.log("new");
+  };
+
+  // Delete Like - /api/post/comment/delete
+  const deleteLike = async () => {
+    if (!user) {
+      return;
+    }
+    const response = await fetch(
+      `http://localhost:4000/api/post/likes/delete`,
+      {
+        method: "POST",
+        body: JSON.stringify({ postId, userEmail: user.email }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+
+    const json = await response.json();
+
+    if (!response.ok) {
+      setError(json.error);
+    }
+
+    if (response.ok) {
+      dispatch({ type: "SET_POST", payload: json });
+    }
   };
 
   return (
     <div className="bg-neutral mx-2 p-6 my-6 flex flex-col relative justify-between rounded shadow">
       <div>
         <div className="flex items-center gap-2">
-          <Link to={`/profile/${post.author}`}>
+          <button
+            onClick={() =>
+              navigate(`/profile/${post.author}`, {
+                state: { post: post },
+              })
+            }
+          >
             <i
               className={
                 currentUser
@@ -153,20 +189,22 @@ function PostList({ post }) {
                   : "fa-solid fa-user border border-accent py-2 px-4 rounded text-3xl shadow"
               }
             />
-          </Link>
+          </button>
           <div>
-            <Link
-              to={{
-                pathname: `/profile/${post.author}`,
-              }}
+            <button
               className={
                 currentUser
                   ? "text-primary text-xl hover:underline"
                   : "text-accent text-xl hover:underline"
               }
+              onClick={() =>
+                navigate(`/profile/${post.author}`, {
+                  state: { post: post },
+                })
+              }
             >
               {post.author}
-            </Link>
+            </button>
             <p className="text-xs text-gray-400">{newTime}</p>
           </div>
         </div>
@@ -175,10 +213,6 @@ function PostList({ post }) {
       <div className="mt-5">
         <p className="text-2xl break-words">{post?.post}</p>
       </div>
-
-      {/* <Link to={`/profile/${post.author}`} className="btn w-20">
-        hi
-      </Link> */}
 
       <div className="pt-2">
         <div className="flex justify-between">
@@ -198,7 +232,14 @@ function PostList({ post }) {
         <div>
           <div className="divider my-1" />
           <div className="flex justify-between px-20">
-            <button onClick={newLikeClick} className="hover:underline">
+            <button
+              onClick={
+                postLike.includes(user.email + postId)
+                  ? deleteLike
+                  : newLikeClick
+              }
+              className="hover:underline"
+            >
               {/* show if liked */}
               {postLike.includes(user.email + postId) ? "Liked" : "Like"}
             </button>
