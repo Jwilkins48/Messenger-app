@@ -41,4 +41,8 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { signUpUser, loginUser };
+const uploadImage = async (req, res) => {
+  console.log(req.file);
+};
+
+export { signUpUser, loginUser, uploadImage };

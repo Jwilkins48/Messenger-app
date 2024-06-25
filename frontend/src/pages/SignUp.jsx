@@ -20,7 +20,7 @@ function SignUp() {
         <h1 className="mb-4 text-2xl text-primary">Sign Up</h1>
         <form className="flex flex-col w-full px-12" onSubmit={onSubmit}>
           <input
-            placeholder="Name"
+            placeholder="Username"
             onChange={(e) => setName(e.currentTarget.value)}
             value={name}
             type="text"

@@ -12,12 +12,6 @@ body {
 }
 
 .left {
-  /* background: rgb(116, 128, 255);
-  background: radial-gradient(
-    circle,
-    rgba(116, 128, 255, 1) 0%,
-    rgba(47, 59, 71, 1) 100%
-  ); */
   background-image: url("./images/pexels-enginakyurt-1435752.jpg");
   border-radius: 5px 0 0 5px;
   background-size: cover;

@@ -54,13 +54,13 @@ function Home() {
   };
 
   return (
-    <div className="p-6 justify-between flex">
-      <div className="start">
+    <div className="pt-6 justify-evenly md:flex ">
+      <div className="start pt-2 w-[25rem] hidden sm:block">
         <ProfileDetails />
       </div>
-      <div className="middle w-[45rem] mt-2">
-        <div className="text-center justify-center pt-8 rounded bg-neutral items-center gap-2">
-          <div className="py-1 shadow">
+      <div className="middle mt-2 md:w-[45rem]">
+        <div className="text-center justify-center pt-8 rounded bg-neutral items-center gap-2 w-[22rem] sm:w-auto m-auto">
+          <div className="px-3 shadow">
             <div className=" flex items-center justify-center gap-2">
               <i className="fa-solid fa-user border border-primary py-2 px-4 rounded text-3xl shadow" />
               <label className="input input-bordered flex items-center w-[37rem] justify-between py-7 shadow">
@@ -77,10 +77,10 @@ function Home() {
               </label>
             </div>
 
-            <div className="divider px-20 pt-2">
+            <div className="divider px-2 sm:px-20 pt-2">
               <i className="fa-solid fa-ghost" />
             </div>
-            <div className="flex gap-40 pt-0 pb-5 items-center justify-center">
+            <div className="flex gap-10 ml-[30px] sm:ml-0 sm:gap-40 pt-0 pb-5 items-center justify-center">
               <PostModal
                 newPostClick={newPostClick}
                 setPost={setPost}
@@ -99,7 +99,7 @@ function Home() {
           ))}
         </div>
       </div>
-      <div>
+      <div className="w-[25rem] hidden sm:block">
         <FriendsList />
       </div>
     </div>

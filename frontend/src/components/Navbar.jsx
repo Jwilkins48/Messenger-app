@@ -13,7 +13,7 @@ function Navbar() {
         </a>
       </div>
 
-      <div>
+      <div className="hidden sm:block">
         {user ? (
           <div className="flex gap-5 items-center">
             <p>{user.email}</p>

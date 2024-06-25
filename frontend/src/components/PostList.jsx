@@ -94,27 +94,6 @@ function PostList({ post }) {
     }
   };
 
-  // Show if post is Liked
-  const userLikeClick = async () => {
-    const userEmail = user.email;
-
-    const response = await fetch(
-      "http://localhost:4000/api/post/likes/userLike",
-      {
-        method: "POST",
-        body: JSON.stringify({ userEmail, postId }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      setError("error");
-    }
-  };
-
   // Like Post - adds to collection and +total number
   const newLikeClick = async (e) => {
     e.preventDefault();
@@ -130,7 +109,6 @@ function PostList({ post }) {
     });
 
     const json = await response.json();
-    userLikeClick();
 
     if (response.ok) {
       dispatch({ type: "SET_POST", payload: json });
@@ -139,8 +117,6 @@ function PostList({ post }) {
     if (!response.ok) {
       setError("error");
     }
-
-    console.log("new");
   };
 
   // Delete Like - /api/post/comment/delete
@@ -231,17 +207,27 @@ function PostList({ post }) {
 
         <div>
           <div className="divider my-1" />
-          <div className="flex justify-between px-20">
+          <div className="flex justify-between px-7 sm:px-20">
             <button
+              className=""
               onClick={
                 postLike.includes(user.email + postId)
                   ? deleteLike
                   : newLikeClick
               }
-              className="hover:underline"
             >
               {/* show if liked */}
-              {postLike.includes(user.email + postId) ? "Liked" : "Like"}
+              {postLike.includes(user.email + postId) ? (
+                <div className="flex items-center gap-1">
+                  <i className="fa-regular fa-heart text-red-400" />
+                  <p className="hover:underline">Liked</p>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <i className="fa-regular fa-heart " />
+                  <p className="hover:underline">Like</p>
+                </div>
+              )}
             </button>
             <button
               className=" hover:underline"
